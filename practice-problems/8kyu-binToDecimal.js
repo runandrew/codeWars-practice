@@ -10,7 +10,6 @@ function binToDec(number) {
     total += parseInt(number[i]) * Math.pow(2, (number.length - 1 - i));
   }
   // multiply that number by the current base exponent and add to sum
-
   return total;
 }
 
