@@ -20,3 +20,5 @@ parseInt(); // Converts a string into a number
 Math.sqrt(); // Square root
 Math.floor(); // Round down the number
 Math.ceil(); // Round up the number
+Math.max.apply(); // Max of an array
+Math.min.apply(); // Min of an array

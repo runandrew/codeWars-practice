@@ -10,7 +10,38 @@ Can Vasya sell a ticket to each person and give the change if he initially has n
 Return YES, if Vasya can sell a ticket to each person and give the change. Otherwise return NO.
 */
 
+
+
+
 function tickets(array) {
-  // keep a running tab of his available cash
-  // create a loop
+  // keep a tab of 25 bills, and 50 bills
+  // if 100 given, check if 50 and 25 exist, then subtract one; else if check is 3 25's exist, then subtract
+  // if 50 given, check if 25 exist, then subtract one; Add one to 50;
+  // if 25 given; Add one to 25
+  var m25 = 0;
+  var m50 = 0;
+  var m100 = 0;
+
+  for (var i = 0; i < array.length; i++) {
+    if (array[i] === 100) {
+      if (m25 >= 1 && m50 >= 1) {
+        m25--; m50--;
+      } else if (m25 >= 3) {
+        m25 -= 3;
+      } else {
+        return "NO";
+      }
+    } else if (array[i] === 50) {
+      if (m25 >= 1) {
+        m25--; m50++;
+      } else {
+        return "NO";
+      }
+    } else {
+      m25++;
+    }
+  }
+  return "YES";
 }
+
+console.log(tickets([25, 25, 25]));
