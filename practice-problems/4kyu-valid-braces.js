@@ -39,6 +39,5 @@ const validBraces = function(braces) {
     function queueGet() {
         return queue.pop();
     }
-};
+}
 
-console.log(validBraces('([{}])'));
