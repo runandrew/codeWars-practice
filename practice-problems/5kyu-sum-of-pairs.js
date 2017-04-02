@@ -31,141 +31,141 @@
 
 // Linked list
 class Node {
-    constructor(val) {
-        this.value = val;
-        this.previous = null;
-        this.next = null;
-    }
+  constructor(val) {
+    this.value = val;
+    this.previous = null;
+    this.next = null;
+  }
 }
 
 class LinkedList {
-    constructor() {
-        this.head = null;
-        this.tail = null;
+  constructor() {
+    this.head = null;
+    this.tail = null;
+  }
+
+  addToHead(val) {
+    const newNode = new Node(val);
+    const formerHead = this.head;
+    this.head = newNode;
+
+    if (formerHead) {
+      formerHead.previous = newNode;
+      newNode.next = formerHead;
     }
 
-    addToHead(val) {
-        const newNode = new Node(val);
-        const formerHead = this.head;
-        this.head = newNode;
+    if (!this.tail) this.tail = newNode;
+  }
 
-        if (formerHead) {
-            formerHead.previous = newNode;
-            newNode.next = formerHead;
-        }
+  addToTail(val) {
+    const newNode = new Node(val);
+    const formerTail = this.tail;
+    this.tail = newNode;
 
-        if (!this.tail) this.tail = newNode;
+    if (formerTail) {
+      formerTail.next = newNode;
+      newNode.previous = formerTail;
     }
 
-    addToTail(val) {
-        const newNode = new Node(val);
-        const formerTail = this.tail;
-        this.tail = newNode;
+    if (!this.head) this.head = this.tail;
+  }
 
-        if (formerTail) {
-            formerTail.next = newNode;
-            newNode.previous = formerTail;
-        }
+  removeTail() {
+    const removedTail = this.tail;
 
-        if (!this.head) this.head = this.tail;
+    if (!removedTail) return;
+
+    if (removedTail.previous) {
+      this.tail = removedTail.previous;
+      this.tail.next = null;
+    } else {
+      this.head = null;
+      this.tail = null;
     }
 
-    removeTail() {
-        const removedTail = this.tail;
+    return removedTail.value;
+  }
 
-        if (!removedTail) return;
+  search(comparator) {
+    let currentNode = this.head;
 
-        if (removedTail.previous) {
-            this.tail = removedTail.previous;
-            this.tail.next = null;
-        } else {
-            this.head = null;
-            this.tail = null;
-        }
-
-        return removedTail.value;
+    if (typeof comparator === 'string') {
+      const comparatorString = comparator;
+      comparator = function(elementValue) {
+        return comparatorString === elementValue;
+      };
     }
 
-    search(comparator) {
-        let currentNode = this.head;
-
-        if (typeof comparator === 'string') {
-            const comparatorString = comparator;
-            comparator = function(elementValue) {
-                return comparatorString === elementValue;
-            };
-        }
-
-        while (currentNode !== null) {
-            if (comparator(currentNode.value)) return currentNode.value;
-            currentNode = currentNode.next;
-        }
-
-        return null;
+    while (currentNode !== null) {
+      if (comparator(currentNode.value)) return currentNode.value;
+      currentNode = currentNode.next;
     }
 
-    size() {
-        let i = 0;
-        let currentNode = this.head;
+    return null;
+  }
 
-        while (currentNode !== null) {
-            i++;
-            currentNode = currentNode.next;
-        }
+  size() {
+    let i = 0;
+    let currentNode = this.head;
 
-        return i;
+    while (currentNode !== null) {
+      i++;
+      currentNode = currentNode.next;
     }
+
+    return i;
+  }
 }
 
 
 // Hash table
 class HashNode {
-    constructor(key, val) {
-        this.value = val;
-        this.key = key;
-    }
+  constructor(key, val) {
+    this.value = val;
+    this.key = key;
+  }
 }
 
 class HashTable {
-    constructor(numBuck) {
-        this.numBuckets = numBuck;
-        this.buckets = new Array(numBuck);
-    }
+  constructor(numBuck) {
+    this.numBuckets = numBuck;
+    this.buckets = new Array(numBuck);
+  }
 
-    set(key, val) {
-        if (typeof key !== 'string') throw new TypeError('Keys must be strings');
-        let hash = HashTable.hash(key);
-        if (!this.buckets[hash]) this.buckets[hash] = new LinkedList();
-        this.buckets[hash].addToTail(new HashNode(key, val));
-    }
+  set(key, val) {
+    if (typeof key !== 'string') throw new TypeError('Keys must be strings');
+    let hash = HashTable.hash(key);
+    if (!this.buckets[hash]) this.buckets[hash] = new LinkedList();
+    this.buckets[hash].addToTail(new HashNode(key, val));
+  }
 
-    get(key) {
-        let hash = this.hash(key);
-        return this.buckets[hash].search(node => node.key === key).value;
-    }
+  get(key) {
+    let hash = this.hash(key);
+    return this.buckets[hash].search(node => node.key === key).value;
+  }
 
-    getAll(key) {
-        const indices = [];
-        const hash = HashTable.hash(key);
-        if (!this.buckets[hash]) return [];
-        let currentNode = this.buckets[hash].head;
-        if (currentNode) {
-            while (currentNode !== null) {
-                indices.push(currentNode.value.value);
-                currentNode = currentNode.next;
-            }
-        }
-        return indices;
+  getAll(key) {
+    const indices = [];
+    const hash = HashTable.hash(key);
+    if (!this.buckets[hash]) return [];
+    let currentNode = this.buckets[hash].head;
+    if (currentNode) {
+      while (currentNode !== null) {
+        indices.push(currentNode.value.value);
+        currentNode = currentNode.next;
+      }
     }
+    return indices;
+  }
 
-    hasKey(key) {
-        let hash = this.hash(key);
-        return Boolean(this.buckets[hash].search(node => node.key === key));
-    }
+  hasKey(key) {
+    let hash = this.hash(key);
+    return Boolean(this.buckets[hash].search(node => node.key === key));
+  }
 
-    static hash(input) {
-        return input;
-    }
+  static hash(input) {
+    return input;
+  }
 }
 
 // const sum_pairs = (arr, num) => {
@@ -202,47 +202,47 @@ class HashTable {
 // };
 
 const sum_pairs = (arr, num) => {
-    // if (arr.length > 1000) return undefined; // Testing purposes only
+  // if (arr.length > 1000) return undefined; // Testing purposes only
 
-    // Create HashTable
-    const hashTable = new HashTable(arr.length);
+  // Create HashTable
+  const hashTable = new HashTable(arr.length);
 
-    // Initialize the lowest pair to an out-of-bounds element
-    let lowestPair = [arr.length, arr.length];
+  // Initialize the lowest pair to an out-of-bounds element
+  let lowestPair = [arr.length, arr.length];
 
-    for (let index = 0; index < arr.length; index++) {
-        const element = arr[index];
-        const diff = num - element;
+  for (let index = 0; index < arr.length; index++) {
+    const element = arr[index];
+    const diff = num - element;
 
-        hashTable.set(diff.toString(), index); // Add element difference to hash table
-        let complimentIndices = hashTable.getAll((arr[index]).toString()); // See if there are any current compliment indices to the current element
+    hashTable.set(diff.toString(), index); // Add element difference to hash table
+    let complimentIndices = hashTable.getAll((arr[index]).toString()); // See if there are any current compliment indices to the current element
 
-        //debugger; // For testing purposes only
+    //debugger; // For testing purposes only
 
-        if (complimentIndices.length) { // If there are compliments that exist in the table
-            let lowestIndex = complimentIndices[0]; // Set the lowest index to the first element
-            let lowestIndexCounter = 0; // Initialize a counter
+    if (complimentIndices.length) { // If there are compliments that exist in the table
+      let lowestIndex = complimentIndices[0]; // Set the lowest index to the first element
+      let lowestIndexCounter = 0; // Initialize a counter
 
-            while (index === lowestIndex) { // If the current index happens to be the same as the lowestIndex, move to the next complimentary index
-                lowestIndex = complimentIndices[++lowestIndexCounter];
-            }
+      while (index === lowestIndex) { // If the current index happens to be the same as the lowestIndex, move to the next complimentary index
+        lowestIndex = complimentIndices[++lowestIndexCounter];
+      }
 
-            if (lowestIndex !== undefined) { // If a lowest index exists, set the lowest pair and break from the loop
-                lowestPair = [lowestIndex, index];
-                break;
-            }
-            // if (lowestIndex < lowestPair[1] && lowestIndex !== undefined) {
-            //     let min = Math.min(index, lowestIndex);
-            //     let max = Math.max(index, lowestIndex);
-            //     lowestPair = [min, max];
-            // }
-        }
+      if (lowestIndex !== undefined) { // If a lowest index exists, set the lowest pair and break from the loop
+        lowestPair = [lowestIndex, index];
+        break;
+      }
+      // if (lowestIndex < lowestPair[1] && lowestIndex !== undefined) {
+      //     let min = Math.min(index, lowestIndex);
+      //     let max = Math.max(index, lowestIndex);
+      //     lowestPair = [min, max];
+      // }
     }
+  }
 
-    // console.log([arr[lowestPair[0]], arr[lowestPair[1]]]); // Test purposes only
+  // console.log([arr[lowestPair[0]], arr[lowestPair[1]]]); // Test purposes only
 
-    const lowestArrayValuePair = [arr[lowestPair[0]], arr[lowestPair[1]]];
-    return lowestArrayValuePair[0] !== undefined ? lowestArrayValuePair : undefined;
+  const lowestArrayValuePair = [arr[lowestPair[0]], arr[lowestPair[1]]];
+  return lowestArrayValuePair[0] !== undefined ? lowestArrayValuePair : undefined;
 };
 
 // console.log(sum_pairs([1, 4, 8, 7, 3, 15], 8));
